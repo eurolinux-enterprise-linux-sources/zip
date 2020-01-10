@@ -1,7 +1,7 @@
 Summary: A file compression and packaging utility compatible with PKZIP
 Name: zip
 Version: 3.0
-Release: 1%{?dist}
+Release: 1%{?dist}.1
 License: BSD
 Group: Applications/Archiving
 Source: http://downloads.sourceforge.net/infozip/zip30.tar.gz
@@ -13,6 +13,7 @@ Patch1: zip-3.0-exec-shield.patch
 Patch2: zip-3.0-currdir.patch
 # Not upstreamed.
 Patch3: zip-3.0-time.patch
+Patch5: zip-3.0-zipnote-fclose.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %description
@@ -29,6 +30,7 @@ program.
 %patch1 -p1 -b .exec-shield
 %patch2 -p1 -b .currdir
 %patch3 -p1 -b .time
+%patch5 -p1
 
 %build
 make -f unix/Makefile prefix=%{_prefix} "CFLAGS_NOOPT=-I. -DUNIX $RPM_OPT_FLAGS" generic_gcc  %{?_smp_mflags}
@@ -58,6 +60,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/zipsplit.1*
 
 %changelog
+* Wed Sep 16 2015 Kamil Dudka <kdudka@redhat.com> - 3.0-1.el6_7.1
+- fix memory corruption in zipnote caused by invalid fclose() (#1258705)
+
 * Fri Nov 13 2009 Karel Klic <kklic@redhat.com> - 3.0-1
 - New upstream version
 - Removed zip23.patch, because ZMEM is not used anyway
